@@ -38,7 +38,7 @@ public class EmployeeController {
 	}
 
 
-	@GetMapping("")
+	@GetMapping("/welcome-page")
 	public String greet() {
 		return "Welcome to the home page"; 
 	}
@@ -60,19 +60,19 @@ public class EmployeeController {
 	}
 
 	//Handler for save or update an employee 
-	@PostMapping("/save-employee")
+	@PostMapping("/admin/save-employee")
 	public void addEmployee(@RequestBody Employee e) {
 		employeeService.addEmployee(e);
 	}
 
 	//Handler for deleting an employee
-	@DeleteMapping("/employee")
+	@DeleteMapping("/admin/employee")
 	public void deleteEmployee(@RequestParam Integer id) {
 		employeeService.deleteEmployee(id);
 	}
 	
 	//Handler for save or update multiple rows
-	@PostMapping("/save-multi-employee")
+	@PostMapping("/admin/save-multi-employee")
 	public void addMultiEmployee(@RequestBody List<Employee> list) {
 		employeeService.saveMultiEmployee(list);
 	}
