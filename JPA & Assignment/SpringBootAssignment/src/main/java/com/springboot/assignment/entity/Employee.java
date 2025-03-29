@@ -27,8 +27,6 @@ public class Employee {
 	@Column(name = "salary")
 	private int salary;
 
-	@Column(name = "reports_to")
-	private int reportsTo;
 
 //	@Column(name = "office_id")
 //	private int officeId;
@@ -77,13 +75,9 @@ public class Employee {
 		this.salary = salary;
 	}
 
-	public int getReportsTo() {
-		return reportsTo;
-	}
+	
 
-	public void setReportsTo(int reportsTo) {
-		this.reportsTo = reportsTo;
-	}
+	
 
 //	public int getOfficeId() {
 //		return officeId;
@@ -101,7 +95,7 @@ public class Employee {
 		this.lastName = lastName;
 		this.jobTitle = jobTitle;
 		this.salary = salary;
-		this.reportsTo = reportsTo;
+		
 		this.office = office;
 	}
 
@@ -112,7 +106,7 @@ public class Employee {
 	@Override
 	public String toString() {
 		return "Employee [employeeId=" + employeeId + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", jobTitle=" + jobTitle + ", salary=" + salary + ", reportsTo=" + reportsTo + ", office=" + office
+				+ ", jobTitle=" + jobTitle + ", salary=" + salary + ", office=" + office
 				+ "]";
 	}
 
