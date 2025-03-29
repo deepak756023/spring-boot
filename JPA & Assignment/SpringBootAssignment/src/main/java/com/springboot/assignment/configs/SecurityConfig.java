@@ -34,7 +34,12 @@ public class SecurityConfig {
         return http
 
                 .csrf(customizer -> customizer.disable())
-                .authorizeHttpRequests(request -> request.anyRequest().authenticated())
+                .authorizeHttpRequests(request -> request
+                //7
+                    .requestMatchers("/admin/**","/save-user/**").hasRole("ADMIN")  // Only ADMIN can access
+                    .requestMatchers("/employees/**","/employee/**").hasAnyRole("USER", "ADMIN")  // Both USER and ADMIN can access
+                    .requestMatchers("/welcome-page/**").permitAll()  // Public access
+                    .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
