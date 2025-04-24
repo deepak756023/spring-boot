@@ -4,9 +4,11 @@ package com.springboot.assignment.configs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,11 +30,15 @@ public class SecurityConfig {
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
                         // 7
-                        .requestMatchers("/admin/**", "/save-user/**").hasRole("ADMIN") // Only ADMIN can access
-                        .requestMatchers("/employees/**", "/employee/**").hasAnyRole("USER", "ADMIN") // Both USER and
-                                                                                                      // ADMIN can
-                                                                                                      // access
-                        .requestMatchers("/welcome-page/**").permitAll() // Public access
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Only ADMIN can access
+                        .requestMatchers("/employees/**", "/employee/**", "/login/**").hasAnyRole("USER", "ADMIN") // Both
+                                                                                                                   // USER
+                                                                                                                   // and
+                        // ADMIN can
+                        // access
+                        .requestMatchers("/welcome-page/**",
+                                "/registration/**")
+                        .permitAll() // Public access
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -48,6 +54,12 @@ public class SecurityConfig {
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12));//
         provider.setUserDetailsService(userDetailsService);
         return provider;
+    }
+
+    // 11
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     // Hardcoded User Details(UserName, Password and rules)//

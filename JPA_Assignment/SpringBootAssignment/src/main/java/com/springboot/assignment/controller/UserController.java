@@ -9,23 +9,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.assignment.entity.User;
 import com.springboot.assignment.repository.UserRepo;
+import com.springboot.assignment.service.UserService;
 
 @RestController
 public class UserController {
 
 	@Autowired
 	private UserRepo userRepo;
-	//4
+
+	@Autowired
+	private UserService userService;
+	// 4
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    //Handler for save
-	@PostMapping("/save-user")
+	// Handler for save
+	@PostMapping("/registration")
 	public User addUser(@RequestBody User user) {
 
-		//5
+		// 5
 		user.setPassword(encoder.encode(user.getPassword()));
 		this.userRepo.save(user);
 		return user;
+	}
+
+	// 12
+	@PostMapping("/login")
+	public String login(@RequestBody User user) {
+
+		return userService.verify(user);
+
 	}
 
 }
