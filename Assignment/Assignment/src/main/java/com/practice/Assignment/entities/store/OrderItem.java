@@ -1,7 +1,6 @@
 package com.practice.Assignment.entities.store;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 
 @Entity
