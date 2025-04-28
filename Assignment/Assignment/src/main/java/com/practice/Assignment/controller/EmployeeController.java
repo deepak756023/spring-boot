@@ -50,4 +50,27 @@ public class EmployeeController {
         Employee employee1 =  employeeService.updateEmployee(id, employee);
         return new ResponseEntity<>(employee1, HttpStatus.OK);
     }
+
+    // COLUMN SEARCH
+    @GetMapping("/lastname-search")
+    public ResponseEntity<List<Employee>> searchEmployeeByLastName(@RequestParam String searchText)
+    {
+        List<Employee> foundEmployees = employeeService.searchEmployees(searchText);
+        if (!foundEmployees.isEmpty()) {
+            return ResponseEntity.ok(foundEmployees);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @GetMapping("/global-search")
+    public ResponseEntity<List<Employee>> globalSearchEmployee(@RequestParam String searchText)
+    {
+        List<Employee> foundEmployees = employeeService.globalSearchEmployees(searchText);
+        if (!foundEmployees.isEmpty()) {
+            return ResponseEntity.ok(foundEmployees);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
 }

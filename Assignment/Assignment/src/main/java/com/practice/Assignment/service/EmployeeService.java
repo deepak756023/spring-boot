@@ -71,4 +71,11 @@ public class EmployeeService {
     }
 
 
+    public List<Employee> searchEmployees(String searchText) {
+        return employeeRepository.findEmployeesByLastNameSearchText(searchText);
+    }
+
+    public List<Employee> globalSearchEmployees(String searchText) {
+        return employeeRepository.findEmployeesByGlobalSearchText(searchText);
+    }
 }
