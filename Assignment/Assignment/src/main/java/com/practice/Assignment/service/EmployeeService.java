@@ -1,7 +1,9 @@
 package com.practice.Assignment.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import com.practice.Assignment.helper.ExcelHelper;
 import com.practice.Assignment.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.practice.Assignment.entities.hr.Employee;
 import com.practice.Assignment.exception.custom_exception.NoSuchEmployeeExistsException;
 import com.practice.Assignment.repo.hr.EmployeeRepository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class EmployeeService {
@@ -77,5 +80,14 @@ public class EmployeeService {
 
     public List<Employee> globalSearchEmployees(String searchText) {
         return employeeRepository.findEmployeesByGlobalSearchText(searchText);
+    }
+
+    public void save(MultipartFile file) {
+        try {
+            List<Employee> employees = ExcelHelper.convertExcelToListOfEmployee(file.getInputStream());
+            this.employeeRepository.saveAll(employees);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

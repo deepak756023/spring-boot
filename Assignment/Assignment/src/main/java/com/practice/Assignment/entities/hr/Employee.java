@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 @Table(name = "employees")
 public class Employee {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "employee_id")
 	private int employeeId;
 

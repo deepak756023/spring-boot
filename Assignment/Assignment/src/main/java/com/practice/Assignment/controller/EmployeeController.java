@@ -1,7 +1,9 @@
 package com.practice.Assignment.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import com.practice.Assignment.helper.ExcelHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import com.practice.Assignment.entities.hr.Employee;
 import com.practice.Assignment.response.ApiResponse;
 import com.practice.Assignment.service.EmployeeService;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@CrossOrigin("*")
 public class EmployeeController {
 
     @Autowired
@@ -72,5 +76,18 @@ public class EmployeeController {
         } else {
             return ResponseEntity.noContent().build();
         }
+    }
+
+    @PostMapping("/employees/upload")
+    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+        if (ExcelHelper.checkExcelFormat(file)) {
+
+            this.employeeService.save(file);
+
+            return ResponseEntity.ok(Map.of("message", "File is uploaded and data is saved to db"));
+
+
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please upload excel file ");
     }
 }
