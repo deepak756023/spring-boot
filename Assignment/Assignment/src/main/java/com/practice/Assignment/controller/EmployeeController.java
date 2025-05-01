@@ -1,11 +1,17 @@
 package com.practice.Assignment.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import com.practice.Assignment.helper.ExcelHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,7 +84,7 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("/employees/upload")
+    @PostMapping("/employees/dump_excel")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
         if (ExcelHelper.checkExcelFormat(file)) {
 
@@ -89,5 +95,19 @@ public class EmployeeController {
 
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please upload excel file ");
+    }
+
+    @GetMapping("/employees/export_excel")
+    public ResponseEntity<Resource> download() throws IOException {
+        String fileName = "employees_export.xlsx";
+
+        ByteArrayInputStream actualData = employeeService.getDataToExcel();
+        InputStreamResource file = new InputStreamResource(actualData);
+
+        ResponseEntity<Resource> body = ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = " +fileName)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+        return body;
     }
 }

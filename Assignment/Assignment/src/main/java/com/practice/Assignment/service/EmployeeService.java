@@ -1,5 +1,6 @@
 package com.practice.Assignment.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -90,4 +91,13 @@ public class EmployeeService {
             e.printStackTrace();
         }
     }
+
+    //Export to Excel
+    public ByteArrayInputStream getDataToExcel() throws IOException {
+        List<Employee> all = employeeRepository.findAll();
+        return ExcelHelper.dataToExcel(all);
+
+
+    }
+
 }
