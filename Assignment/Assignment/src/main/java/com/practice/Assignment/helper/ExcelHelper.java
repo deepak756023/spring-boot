@@ -2,6 +2,8 @@ package com.practice.Assignment.helper;
 
 import com.practice.Assignment.entities.hr.Employee;
 import com.practice.Assignment.entities.hr.Office;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -9,6 +11,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -102,5 +107,72 @@ public class ExcelHelper {
         return list;
     }
 
+    //Exporting from db to Excel
+    public static String[] header = {
+            "employee_id",
+            "first_name",
+            "last_name",
+            "job_title",
+            "salary",
+            "officeId",
+            "address",
+            "city",
+            "state"
+    };
+
+    public  static String sheetNme = "employee_data";
+
+    public static ByteArrayInputStream dataToExcel(List<Employee> list) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try{
+
+
+            Sheet sheet = workbook.createSheet(sheetNme);
+
+            Row row = sheet.createRow(0);
+            for(int i = 0; i < header.length; i++){
+                Cell cell = row.createCell(i);
+                cell.setCellValue(header[i]);
+            }
+
+            int rowIndex = 1;
+            for(Employee e:list){
+                Row dataRow = sheet.createRow(rowIndex);
+
+
+                dataRow.createCell(0).setCellValue(e.getEmployeeId());
+                dataRow.createCell(1).setCellValue(e.getFirstName());
+                dataRow.createCell(2).setCellValue(e.getLastName());
+                dataRow.createCell(3).setCellValue(e.getJobTitle());
+                dataRow.createCell(4).setCellValue(e.getOffice().getOfficeId());
+                dataRow.createCell(5).setCellValue(e.getOffice().getAddress());
+                dataRow.createCell(6).setCellValue(e.getOffice().getCity());
+                dataRow.createCell(7).setCellValue(e.getOffice().getState());
+
+                rowIndex++;
+            }
+
+            workbook.write(out);
+
+            return new ByteArrayInputStream(out.toByteArray());
+
+
+
+
+
+        }catch (IOException e){
+            e.printStackTrace();
+            System.out.println("failed to export data");
+            return null;
+        }finally{
+            workbook.close();
+            out.close();
+
+        }
+
+
+    }
 
 }
