@@ -2,12 +2,9 @@ package com.practice.Assignment.helper;
 
 import com.practice.Assignment.entities.hr.Employee;
 import com.practice.Assignment.entities.hr.Office;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -77,7 +74,7 @@ public class ExcelHelper {
                             employee.setJobTitle(cell.getStringCellValue());
                             break;
                         case 4:
-                            employee.setSalary((int)cell.getNumericCellValue());
+                            employee.setSalary((int) cell.getNumericCellValue());
                             break;
                         case 5:
                             office.setOfficeId((int) cell.getNumericCellValue());
@@ -120,25 +117,36 @@ public class ExcelHelper {
             "state"
     };
 
-    public  static String sheetNme = "employee_data";
+    public static String sheetNme = "employee_data";
 
     public static ByteArrayInputStream dataToExcel(List<Employee> list) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        try{
+        try {
 
 
             Sheet sheet = workbook.createSheet(sheetNme);
 
+            CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.AQUA.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerStyle.setFont(headerFont);
+
             Row row = sheet.createRow(0);
-            for(int i = 0; i < header.length; i++){
+            for (int i = 0; i < header.length; i++) {
                 Cell cell = row.createCell(i);
                 cell.setCellValue(header[i]);
+                cell.setCellStyle(headerStyle);
             }
 
             int rowIndex = 1;
-            for(Employee e:list){
+            for (Employee e : list) {
                 Row dataRow = sheet.createRow(rowIndex);
 
 
@@ -146,10 +154,11 @@ public class ExcelHelper {
                 dataRow.createCell(1).setCellValue(e.getFirstName());
                 dataRow.createCell(2).setCellValue(e.getLastName());
                 dataRow.createCell(3).setCellValue(e.getJobTitle());
-                dataRow.createCell(4).setCellValue(e.getOffice().getOfficeId());
-                dataRow.createCell(5).setCellValue(e.getOffice().getAddress());
-                dataRow.createCell(6).setCellValue(e.getOffice().getCity());
-                dataRow.createCell(7).setCellValue(e.getOffice().getState());
+                dataRow.createCell(4).setCellValue(e.getSalary());
+                dataRow.createCell(5).setCellValue(e.getOffice().getOfficeId());
+                dataRow.createCell(6).setCellValue(e.getOffice().getAddress());
+                dataRow.createCell(7).setCellValue(e.getOffice().getCity());
+                dataRow.createCell(8).setCellValue(e.getOffice().getState());
 
                 rowIndex++;
             }
@@ -159,14 +168,11 @@ public class ExcelHelper {
             return new ByteArrayInputStream(out.toByteArray());
 
 
-
-
-
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             System.out.println("failed to export data");
             return null;
-        }finally{
+        } finally {
             workbook.close();
             out.close();
 
