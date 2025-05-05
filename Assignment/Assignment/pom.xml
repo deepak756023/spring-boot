@@ -54,7 +54,16 @@
 			<version>5.2.5</version>
 		</dependency>
 
-<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.poi/poi &ndash;&gt;-->
+		<dependency>
+			<groupId>org.mindrot</groupId>
+			<artifactId>jbcrypt</artifactId>
+			<version>0.4</version>
+		</dependency>
+
+
+
+
+		<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.poi/poi &ndash;&gt;-->
 <!--		<dependency>-->
 <!--			<groupId>org.apache.poi</groupId>-->
 <!--			<artifactId>poi-ooxml</artifactId>-->
