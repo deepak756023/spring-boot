@@ -31,6 +31,11 @@ public class UserController {
 
     }
 
+    @PutMapping("/password-change")
+    public void changePassword(@RequestParam String mail, @RequestParam String oldPWD, @RequestParam String newPWD){
+        this.userService.changePwd(mail, oldPWD, newPWD);
+    }
+
 
 
 
