@@ -75,8 +75,8 @@ public class UserService {
         User user = userRepository.findByMailId(mail);
         if(user == null){
             throw new InvalidEmailException("Wrong Email Id!!!");
-        }
-        if (BCrypt.checkpw(oldPWD, user.getPassword())) {
+
+        } else if (BCrypt.checkpw(oldPWD, user.getPassword())) {
             user.setPassword(BCrypt.hashpw(newPWD, BCrypt.gensalt()));
             user.setUpdatedBy(user.getUpdatedBy());
             user.setUpdatedOn(LocalDateTime.now());
