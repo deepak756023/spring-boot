@@ -1,5 +1,8 @@
 package com.practice.assignment.service;
 
+import com.practice.assignment.exception.custom_exception.EmailAlreadyUsedException;
+import com.practice.assignment.exception.custom_exception.InvalidEmailException;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;
 import com.practice.assignment.entities.store.User;
 import com.practice.assignment.exception.custom_exception.NoSuchEmployeeExistsException;
@@ -17,6 +20,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+
+
     public List<User> getAll() {
         return userRepository.findAll();
     }
@@ -24,8 +29,19 @@ public class UserService {
 
 
     public void saveUser(User user) {
-        user.setCreatedOn(LocalDateTime.now());
-        this.userRepository.save(user);
+        String mail = user.getMailId();
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        if(isValidEmail(mail)){
+            if(!isEmailAlreadyUsed(mail)) {
+                user.setCreatedOn(LocalDateTime.now());
+                this.userRepository.save(user);
+            }else{
+                throw new EmailAlreadyUsedException("Email Already Used");
+            }
+        }else{
+            throw new InvalidEmailException("Email invalid!!!");
+        }
+
 
     }
 
@@ -33,6 +49,7 @@ public class UserService {
         User original = userRepository.findById(id).orElseThrow(() -> new NoSuchEmployeeExistsException("NO USER PRESENT WITH ID = " + id));
         original.setFirstName(user.getFirstName());
         original.setLastName(user.getLastName());
+        original.setMailId(user.getMailId());
         original.setUpdatedBy(user.getUpdatedBy());
         original.setUpdatedOn(LocalDateTime.now());
         original.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
@@ -40,6 +57,18 @@ public class UserService {
 
 
     }
+
+    private boolean isValidEmail(String mail){
+        return EmailValidator.getInstance().isValid(mail);
+    }
+
+    private boolean isEmailAlreadyUsed(String mail) {
+        List<User> list = getAll();
+        return list.stream()
+                .map(User::getMailId)
+                .anyMatch(e -> e.equals(mail));
+    }
+
 
 
 }
