@@ -17,6 +17,9 @@ public class User {
     @Column(name="last_name")
     private String lastName;
 
+    @Column(name = "mail_id")
+    private String mailId;
+
     @Column(name="is_active")
     private Boolean isActive;
 
@@ -35,11 +38,21 @@ public class User {
     @Column(name="password")
     private String password;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private UserPassword userPassword;
+    public User(String createdBy, LocalDateTime createdOn, String firstName, int id, Boolean isActive, String lastName, String mailId, String password, String updatedBy, LocalDateTime updatedOn) {
+        this.createdBy = createdBy;
+        this.createdOn = createdOn;
+        this.firstName = firstName;
+        this.id = id;
+        this.isActive = isActive;
+        this.lastName = lastName;
+        this.mailId = mailId;
+        this.password = password;
+        this.updatedBy = updatedBy;
+        this.updatedOn = updatedOn;
+    }
 
-
-
+    public User() {
+    }
 
     public String getCreatedBy() {
         return createdBy;
@@ -89,6 +102,14 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getMailId() {
+        return mailId;
+    }
+
+    public void setMailId(String mailId) {
+        this.mailId = mailId;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -113,28 +134,14 @@ public class User {
         this.updatedOn = updatedOn;
     }
 
-    public User(String createdBy, LocalDateTime createdOn, String firstName, int id, String updatedBy, String password, String lastName, Boolean isActive, LocalDateTime updatedOn) {
-        this.createdBy = createdBy;
-        this.createdOn = createdOn;
-        this.firstName = firstName;
-        this.id = id;
-        this.updatedBy = updatedBy;
-        this.password = password;
-        this.lastName = lastName;
-        this.isActive = isActive;
-        this.updatedOn = updatedOn;
-    }
-
-    public User() {
-    }
-
     @Override
     public String toString() {
-        return "user{" +
+        return "User{" +
                 "createdBy='" + createdBy + '\'' +
                 ", id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", mailId='" + mailId + '\'' +
                 ", isActive=" + isActive +
                 ", createdOn=" + createdOn +
                 ", updatedOn=" + updatedOn +
