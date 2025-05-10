@@ -2,6 +2,7 @@ package com.practice.assignment.service;
 
 import com.practice.assignment.exception.custom_exception.EmailAlreadyUsedException;
 import com.practice.assignment.exception.custom_exception.InvalidEmailException;
+import com.practice.assignment.exception.custom_exception.WrongPasswordException;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;
 import com.practice.assignment.entities.store.User;
@@ -52,7 +53,6 @@ public class UserService {
         original.setMailId(user.getMailId());
         original.setUpdatedBy(user.getUpdatedBy());
         original.setUpdatedOn(LocalDateTime.now());
-        original.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         return userRepository.save(original);
 
 
@@ -70,5 +70,20 @@ public class UserService {
     }
 
 
+    public void changePwd(String mail, String oldPWD, String newPWD) {
 
+        User user = userRepository.findByMailId(mail);
+        if(user == null){
+            throw new InvalidEmailException("Wrong Email Id!!!");
+        }
+        if (BCrypt.checkpw(oldPWD, user.getPassword())) {
+            user.setPassword(BCrypt.hashpw(newPWD, BCrypt.gensalt()));
+            user.setUpdatedBy(user.getUpdatedBy());
+            user.setUpdatedOn(LocalDateTime.now());
+            this.userRepository.save(user);
+        } else {
+            throw new WrongPasswordException("Wrong Password!!!");
+        }
+
+    }
 }
