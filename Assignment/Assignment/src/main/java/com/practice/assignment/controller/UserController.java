@@ -1,6 +1,7 @@
 package com.practice.assignment.controller;
 
 import com.practice.assignment.entities.store.User;
+import com.practice.assignment.entities.store.UserPassword;
 import com.practice.assignment.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,16 @@ public class UserController {
     @PutMapping("/password-change")
     public void changePassword(@RequestParam String mail, @RequestParam String oldPWD, @RequestParam String newPWD){
         this.userService.changePwd(mail, oldPWD, newPWD);
+    }
+
+    @GetMapping("/all-passwords")
+    public List<UserPassword> getAllPassword(){
+        return userService.getPassword();
+    }
+
+    @GetMapping("/user-isActive")
+    public Boolean isActive(@RequestParam String mail){
+        return userService.isUserActive(mail);
     }
 
 

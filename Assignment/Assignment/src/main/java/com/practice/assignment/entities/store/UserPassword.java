@@ -1,6 +1,7 @@
 package com.practice.assignment.entities.store;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_password")
@@ -9,6 +10,7 @@ public class UserPassword {
     @Id
     private int id; // separate PK
 
+    @MapsId
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "id", unique = true)
     private User user;
@@ -22,13 +24,19 @@ public class UserPassword {
     @Column(name = "password_three", length = 100)
     private String passwordThree;
 
-    public UserPassword() {
-    }
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 
-    public UserPassword(String passwordOne, String passwordTwo, String passwordThree) {
-        this.passwordOne = passwordOne;
+    public UserPassword(int id, User user, String passwordTwo, String passwordThree, String passwordOne, LocalDateTime lastUpdated) {
+        this.id = id;
+        this.user = user;
         this.passwordTwo = passwordTwo;
         this.passwordThree = passwordThree;
+        this.passwordOne = passwordOne;
+        this.lastUpdated = lastUpdated;
+    }
+
+    public UserPassword() {
     }
 
     public int getId() {
@@ -71,12 +79,12 @@ public class UserPassword {
         this.passwordOne = passwordOne;
     }
 
-    public UserPassword(int id, User user, String passwordTwo, String passwordThree, String passwordOne) {
-        this.id = id;
-        this.user = user;
-        this.passwordTwo = passwordTwo;
-        this.passwordThree = passwordThree;
-        this.passwordOne = passwordOne;
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     @Override
@@ -87,6 +95,7 @@ public class UserPassword {
                 ", passwordOne='" + passwordOne + '\'' +
                 ", passwordTwo='" + passwordTwo + '\'' +
                 ", passwordThree='" + passwordThree + '\'' +
+                ", lastUpdated=" + lastUpdated +
                 '}';
     }
 }

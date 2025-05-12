@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(WrongPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ErrorResponse handleException(WrongPasswordException ex) {
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return new ErrorResponse(HttpStatus.EXPECTATION_FAILED.value(), ex.getMessage());
     }
 
     @ExceptionHandler(ExcelColumnMismatch.class)

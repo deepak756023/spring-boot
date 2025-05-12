@@ -102,11 +102,15 @@ public class EmployeeService {
     }
 
     public ResponseEntity<Map<String, Object>> save(MultipartFile file) {
+        String status = "status";
+        String error = "error";
+        String message = "message";
+        String details = "details";
         try {
             if (file == null || file.isEmpty()) {
                 return ResponseEntity.badRequest().body(Collections.unmodifiableMap(Map.of(
-                        "status", "error",
-                        "message", "Please select a file to upload"
+                        status, error,
+                        message, "Please select a file to upload"
                 )));
             }
 
@@ -115,28 +119,28 @@ public class EmployeeService {
                 employeeRepository.saveAll(employees);
 
                 return ResponseEntity.ok(Collections.unmodifiableMap(Map.of(
-                        "status", "success",
-                        "message", "File uploaded successfully",
+                        status, "success",
+                        message, "File uploaded successfully",
                         "recordsProcessed", employees.size()
                 )));
             }
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Collections.unmodifiableMap(Map.of(
-                    "status", "error",
-                    "message", "Excel file structure issue",
-                    "details", e.getMessage() != null ? e.getMessage() : "No details available"
+                    status, error,
+                    message, "Excel file structure issue",
+                    details, e.getMessage() != null ? e.getMessage() : "No details available"
             )));
         } catch (ExcelColumnMismatch e) { // Changed to follow naming conventions
             return ResponseEntity.badRequest().body(Collections.unmodifiableMap(Map.of(
-                    "status", "error",
-                    "message", "Excel column validation failed",
-                    "details", e.getMessage() != null ? e.getMessage() : "No details available"
+                    status, error,
+                    message, "Excel column validation failed",
+                    details, e.getMessage() != null ? e.getMessage() : "No detail available"
             )));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(Collections.unmodifiableMap(Map.of(
-                    "status", "error",
-                    "message", "Failed to process Excel file",
-                    "details", e.getMessage() != null ? e.getMessage() : "No details available"
+                    status, error,
+                    message, "Failed to process Excel file",
+                    details, e.getMessage() != null ? e.getMessage() : "No details available"
             )));
         }
     }

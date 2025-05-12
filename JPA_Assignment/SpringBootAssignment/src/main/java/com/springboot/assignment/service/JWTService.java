@@ -1,8 +1,8 @@
 package com.springboot.assignment.service;
 
-import io.jsonwebtoken;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Jwts; // For JWT builder
+import io.jsonwebtoken.io.Decoders; // For Base64 decoding
+import io.jsonwebtoken.security.Keys; // For key generation (note: 'K' in Keys is uppercase)
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
