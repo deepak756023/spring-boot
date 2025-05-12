@@ -14,10 +14,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.logging.Logger;
+
 
 @Service
 public class ExcelHelper {
 
+
+    static Logger logger = Logger.getLogger(ExcelHelper.class.getName());
 
     private  final OfficeRepository officeRepository;
 
@@ -30,16 +34,12 @@ public class ExcelHelper {
 
         String contentType = file.getContentType();
 
-        if (contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-            return true;
-        } else {
-            return false;
-        }
+        return (Objects.equals(contentType, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
 
     }
 
     //convert excel to list of products
-    public  List<Employee> convertExcelToListOfEmployee(InputStream is) throws ExcelColumnMismatch, IllegalArgumentException {
+    public  List<Employee> convertExcelToListOfEmployee(InputStream is) throws ExcelColumnMismatch, IllegalArgumentException, IOException {
         List<Employee> list = new ArrayList<>();
         List<String> expectedHeaders = Arrays.asList(
                 "employeeId", "firstName", "lastName", "jobTitle", "salary",
@@ -101,6 +101,9 @@ public class ExcelHelper {
                         case 5:
                             officeId = (int) cell.getNumericCellValue(); // Store officeId
                             break;
+                        default:
+                            break;
+
                     }
                 }
 
@@ -112,7 +115,7 @@ public class ExcelHelper {
                 list.add(employee);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error reading Excel file", e);
+            throw new IOException("Error reading Excel file", e);
         }
 
         return list;
@@ -123,7 +126,7 @@ public class ExcelHelper {
 
 
     //Exporting from db to Excel
-    public static String[] header = {
+    protected static String[] header = {
             "employee_id",
             "first_name",
             "last_name",
@@ -135,16 +138,14 @@ public class ExcelHelper {
             "state"
     };
 
-    public static String sheetNme = "employee_data";
+    public static final String SHEETNAME = "employee_data";
 
     public static ByteArrayInputStream dataToExcel(List<Employee> list) throws IOException {
-        Workbook workbook = new XSSFWorkbook();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        try {
-
-
-            Sheet sheet = workbook.createSheet(sheetNme);
+        try (
+                Workbook workbook = new XSSFWorkbook();
+                ByteArrayOutputStream out = new ByteArrayOutputStream()
+        ) {
+            Sheet sheet = workbook.createSheet(SHEETNAME);
 
             CellStyle headerStyle = workbook.createCellStyle();
             headerStyle.setFillForegroundColor(IndexedColors.AQUA.getIndex());
@@ -165,8 +166,7 @@ public class ExcelHelper {
 
             int rowIndex = 1;
             for (Employee e : list) {
-                Row dataRow = sheet.createRow(rowIndex);
-
+                Row dataRow = sheet.createRow(rowIndex++);
 
                 dataRow.createCell(0).setCellValue(e.getEmployeeId());
                 dataRow.createCell(1).setCellValue(e.getFirstName());
@@ -177,31 +177,21 @@ public class ExcelHelper {
                 dataRow.createCell(6).setCellValue(e.getOffice().getAddress());
                 dataRow.createCell(7).setCellValue(e.getOffice().getCity());
                 dataRow.createCell(8).setCellValue(e.getOffice().getState());
-
-                rowIndex++;
             }
+
             for (int i = 0; i < header.length; i++) {
                 sheet.autoSizeColumn(i);
             }
 
-
             workbook.write(out);
-
             return new ByteArrayInputStream(out.toByteArray());
 
-
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("failed to export data");
+            logger.info("Failed to export data");
             return null;
-        } finally {
-            workbook.close();
-            out.close();
-
         }
-
-
     }
+
 
 }
 

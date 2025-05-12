@@ -1,5 +1,6 @@
 package com.practice.assignment.entities.store;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "user")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -38,17 +40,24 @@ public class User {
     @Column(name="password")
     private String password;
 
-    public User(String createdBy, LocalDateTime createdOn, String firstName, int id, Boolean isActive, String lastName, String mailId, String password, String updatedBy, LocalDateTime updatedOn) {
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private UserPassword userPassword;
+
+
+
+    public User(String createdBy, UserPassword userPassword, LocalDateTime updatedOn, String updatedBy, String password, String mailId, String lastName, Boolean isActive, int id, String firstName, LocalDateTime createdOn) {
         this.createdBy = createdBy;
-        this.createdOn = createdOn;
-        this.firstName = firstName;
-        this.id = id;
-        this.isActive = isActive;
-        this.lastName = lastName;
-        this.mailId = mailId;
-        this.password = password;
-        this.updatedBy = updatedBy;
+        this.userPassword = userPassword;
         this.updatedOn = updatedOn;
+        this.updatedBy = updatedBy;
+        this.password = password;
+        this.mailId = mailId;
+        this.lastName = lastName;
+        this.isActive = isActive;
+        this.id = id;
+        this.firstName = firstName;
+        this.createdOn = createdOn;
     }
 
     public User() {
@@ -62,60 +71,20 @@ public class User {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
+    public UserPassword getUserPassword() {
+        return userPassword;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
+    public void setUserPassword(UserPassword userPassword) {
+        this.userPassword = userPassword;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public LocalDateTime getUpdatedOn() {
+        return updatedOn;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getMailId() {
-        return mailId;
-    }
-
-    public void setMailId(String mailId) {
-        this.mailId = mailId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUpdatedOn(LocalDateTime updatedOn) {
+        this.updatedOn = updatedOn;
     }
 
     public String getUpdatedBy() {
@@ -126,12 +95,60 @@ public class User {
         this.updatedBy = updatedBy;
     }
 
-    public LocalDateTime getUpdatedOn() {
-        return updatedOn;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUpdatedOn(LocalDateTime updatedOn) {
-        this.updatedOn = updatedOn;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getMailId() {
+        return mailId;
+    }
+
+    public void setMailId(String mailId) {
+        this.mailId = mailId;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
     }
 
     @Override
@@ -147,6 +164,7 @@ public class User {
                 ", updatedOn=" + updatedOn +
                 ", updatedBy='" + updatedBy + '\'' +
                 ", password='" + password + '\'' +
+                ", userPassword=" + userPassword +
                 '}';
     }
 }

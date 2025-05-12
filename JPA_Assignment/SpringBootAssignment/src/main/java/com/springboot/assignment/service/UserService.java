@@ -18,12 +18,15 @@ public class UserService {
     @Autowired
     AuthenticationManager authManager;
 
+    @Autowired
+    private JWTService jwtService;
+
     public String verify(User user) {
         Authentication authentication = authManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         if (authentication.isAuthenticated()) {
-            return "success";
+            return jwtService.generateToken(user.getUsername());
         }
         return "fail";
 
