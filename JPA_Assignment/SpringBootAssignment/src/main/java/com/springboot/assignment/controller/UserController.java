@@ -1,6 +1,7 @@
 
 package com.springboot.assignment.controller;
 
+import com.springboot.assignment.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.assignment.entity.User;
 import com.springboot.assignment.repository.UserRepo;
-import com.springboot.assignment.service.UserService;
 
 @RestController
 public class UserController {
