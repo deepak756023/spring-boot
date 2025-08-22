@@ -15,10 +15,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -31,17 +35,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         // 7
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Only ADMIN can access
-                        .requestMatchers("/employees/**", "/employee/**", "/login/**").hasAnyRole("USER", "ADMIN") // Both
+                        .requestMatchers("/employees/**", "/employee/**").hasAnyRole("USER", "ADMIN") // Both
                                                                                                                    // USER
                                                                                                                    // and
                         // ADMIN can
                         // access
                         .requestMatchers("/welcome-page/**",
-                                "/registration/**")
+                                "/registration/**", "/login/**")
                         .permitAll() // Public access
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 15
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
         // http.formLogin(Customizer.withDefaults());
 

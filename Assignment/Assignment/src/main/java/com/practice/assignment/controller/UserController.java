@@ -1,14 +1,18 @@
 package com.practice.assignment.controller;
 
+import com.practice.assignment.entities.store.ResetPasswordRequest;
 import com.practice.assignment.entities.store.User;
 import com.practice.assignment.entities.store.UserPassword;
 import com.practice.assignment.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class UserController {
+
 
     private final UserService userService;
     public UserController(UserService userService){
@@ -46,6 +50,26 @@ public class UserController {
     public Boolean isActive(@RequestParam String mail){
         return userService.isUserActive(mail);
     }
+
+    @GetMapping("/login")
+    public Boolean isValidAuthentication(@RequestParam String mail, @RequestParam String pwd){
+        return userService.isUserValid(mail, pwd);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        userService.createPasswordResetToken(email);
+        return ResponseEntity.ok("Password reset link sent");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Boolean> resetPassword(@RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok(true);
+    }
+
+
+
 
 
 
