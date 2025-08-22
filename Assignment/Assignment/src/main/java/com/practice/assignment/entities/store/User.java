@@ -1,6 +1,6 @@
 package com.practice.assignment.entities.store;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -22,6 +22,7 @@ public class User {
     @Column(name = "mail_id")
     private String mailId;
 
+    @JsonProperty("isActive")
     @Column(name="is_active")
     private Boolean isActive;
 
@@ -40,15 +41,15 @@ public class User {
     @Column(name="password")
     private String password;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnore
-    private UserPassword userPassword;
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JsonIgnore
+//    private UserPassword userPassword;
 
 
 
     public User(String createdBy, UserPassword userPassword, LocalDateTime updatedOn, String updatedBy, String password, String mailId, String lastName, Boolean isActive, int id, String firstName, LocalDateTime createdOn) {
         this.createdBy = createdBy;
-        this.userPassword = userPassword;
+//        this.userPassword = userPassword;
         this.updatedOn = updatedOn;
         this.updatedBy = updatedBy;
         this.password = password;
@@ -71,13 +72,13 @@ public class User {
         this.createdBy = createdBy;
     }
 
-    public UserPassword getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(UserPassword userPassword) {
-        this.userPassword = userPassword;
-    }
+//    public UserPassword getUserPassword() {
+//        return userPassword;
+//    }
+//
+//    public void setUserPassword(UserPassword userPassword) {
+//        this.userPassword = userPassword;
+//    }
 
     public LocalDateTime getUpdatedOn() {
         return updatedOn;
@@ -164,7 +165,7 @@ public class User {
                 ", updatedOn=" + updatedOn +
                 ", updatedBy='" + updatedBy + '\'' +
                 ", password='" + password + '\'' +
-                ", userPassword=" + userPassword +
+//                ", userPassword=" + userPassword +
                 '}';
     }
 }

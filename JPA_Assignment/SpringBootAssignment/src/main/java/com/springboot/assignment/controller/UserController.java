@@ -33,11 +33,10 @@ public class UserController {
 	}
 
 	// 12
-	@PostMapping("/login")
-	public String login(@RequestBody User user) {
+	 @PostMapping("/login")
+	 public String login(@RequestBody User user) {
+	 return userService.verify(user);
 
-		return userService.verify(user);
-
-	}
+	 }
 
 }

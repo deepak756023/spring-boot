@@ -1,9 +1,9 @@
 package com.practice.assignment.controller;
 
 import com.practice.assignment.helper.EmailSenderService;
-import jakarta.mail.MessagingException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("/api/mail")
@@ -27,5 +27,7 @@ public class MailController {
             return "Error: " + e.getMessage();
         }
     }
+
+
 
 }
